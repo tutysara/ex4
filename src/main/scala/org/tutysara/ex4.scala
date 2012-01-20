@@ -68,7 +68,20 @@ displayData(X_sel);
 
 printf("Program paused. Press enter to continue.\n");
 pause();
+/* 
+ ================ Part 2: Loading Pameters ================
+ In this part of the exercise, we load some pre-initialized 
+ neural network parameters.
+*/
+printf("\nLoading Saved Neural Network Parameters ...\n")
 
-  }
+// Load the weights into variables Theta1 and Theta2
+val varMap_weights=load(FILE_WEIGHTS,"Theta1","Theta2");
+val Theta1=varMap_weights.get("Theta1").get.get.asInstanceOf[MLDouble].asVector
+val Theta2=varMap_weights.get("Theta2").get.get.asInstanceOf[MLDouble].asVector
+// Unroll parameters 
+val nn_params = (Theta1.toArray ++ Theta2.toArray).asVector
+
+  } 
 
 }
