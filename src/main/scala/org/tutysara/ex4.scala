@@ -127,6 +127,45 @@ printf("Cost at parameters (loaded from ex4weights): %f "+
 
 printf("\nProgram paused. Press enter to continue.\n");
 pause();
+
+/*
+  =============== Part 4: Implement Regularization ===============
+ 
+  Once your cost function implementation is correct, you should now
+  continue to implement the regularization with the cost.
+
+*/
+printf("\nChecking Cost Function (w/ Regularization) ... \n")
+
+// Weight regularization parameter (we set this to 1 here).
+val lambda4 = 1;
+
+val (j4,grad4) = nnCostFunction(nn_params, input_layer_size, hidden_layer_size,
+                   num_labels, X.toDense, y, lambda4);
+
+printf("Cost at parameters (loaded from ex4weights): %f "+
+         "\n(this value should be about 0.383770)\n", j4);
+
+printf("Program paused. Press enter to continue.\n");
+pause();
+/*
+  ================ Part 5: Sigmoid Gradient  ================
+
+  Before you start implementing the neural network, you will first
+  implement the gradient for the sigmoid function. You should complete the
+  code in the sigmoidGradient.m file.
+
+*/
+printf("\nEvaluating sigmoid gradient...\n")
+//import org.tutysara.SigmoidGradientLib._
+
+val g = sigmoidGradient(DenseMatrix((1.0,-0.5,0.0, 0.5,1.0),(1.0,-0.5,0.0, 0.5,1.0)));
+printf("Sigmoid gradient evaluated at [1 -0.5 0 0.5 1]:\n  ");
+println( g);
+printf("\n\n");
+
+printf("Program paused. Press enter to continue.\n");
+pause();
   } 
 
 }

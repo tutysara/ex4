@@ -44,10 +44,10 @@ object nnCostFunction {
         	)
      println("Theta2 = "+Theta2.numRows,Theta2.numCols)
      
-    println("Theta2 patch 1= \n"+Theta2(0 to 9,0 to 7))
-	println("Theta2 patch 2= \n"+Theta2(0 to 9,8 to 15))
-	println("Theta2 patch 3= \n"+Theta2(0 to 9,16 to 23))
-	println("Theta2 patch 3= \n"+Theta2(0 to 9,24 to 25))
+   // println("Theta2 patch 1= \n"+Theta2(0 to 9,0 to 7))
+	//println("Theta2 patch 2= \n"+Theta2(0 to 9,8 to 15))
+	//println("Theta2 patch 3= \n"+Theta2(0 to 9,16 to 23))
+	//println("Theta2 patch 3= \n"+Theta2(0 to 9,24 to 25))
 	
 	
     // Setup some useful variables
@@ -71,17 +71,17 @@ object nnCostFunction {
          computed in ex4.m
 
 */
-	println("Theta1 patch = \n"+Theta1(0 to 5,0 to 5))
-	println("Theta2 patch = \n"+Theta2(0 to 5,0 to 5))
-    println("X = "+X.numRows,X.numCols)
-    println("X patch = \n"+X(0 to 5,0 to 5))
+	//println("Theta1 patch = \n"+Theta1(0 to 5,0 to 5))
+	//println("Theta2 patch = \n"+Theta2(0 to 5,0 to 5))
+   // println("X = "+X.numRows,X.numCols)
+   // println("X patch = \n"+X(0 to 5,0 to 5))
     val X_new = DenseMatrix.horzcat( DenseMatrix.ones[Double](X.numRows,1),X); //add bias terms
     println("X_new = "+X_new.numRows,X_new.numCols)
-    println("X_new patch = \n"+X_new(0 to 5,0 to 5))
+   //println("X_new patch = \n"+X_new(0 to 5,0 to 5))
 	//calculate z_2, a_2, z_3, a_3
 	//val test=exp(X)
     val Z_2=Theta1*X_new.t; //z_2 for all examples with one column per example
-     println("Z_2 =\n"+Z_2) //z_2 iw wrong from second row
+    // println("Z_2 =\n"+Z_2) //z_2 iw wrong from second row
     val A_2=sigmoid1(Z_2);
     println("A_2 ="+A_2.numRows,A_2.numCols)
      println(A_2)
@@ -101,7 +101,7 @@ val Y=DenseMatrix.tabulate[Int](num_labels,m)(//result matrix
 				}
 		)
 println("Y.size = "+Y.numRows, Y.numCols)
-println("Y = "+Y)
+//println("Y = "+Y)
 	//calculate cost for all classes in an example and all examples
 	
 //val J_all=Y.*log(A_3)+(ones(size(Y))-Y).*log(ones(size(A_3))-A_3);
@@ -111,13 +111,44 @@ val J_all=Y:*log(A_3):+
 		)
 println("J_all = "+J_all)//J_all is wrong
 
-val sm1=J_all.data.sum//-26701.827321 should be -1438.145826
-val sm2=(sum(J_all).toArray).sum
-printf("sm1=%f,sm2=%f",sm1,sm2)
+//val sm1=J_all.data.sum//-26701.827321 should be -1438.145826
+//val sm2=(sum(J_all).toArray).sum
+//printf("sm1=%f,sm2=%f",sm1,sm2)
 J = -(1.0/m) * J_all.data.sum; //sum all the data
-println("J = "+J)
+//println("J = "+J)
 val grad=(Theta1_grad.data ++ Theta2_grad.data).asVector
-println("grad = "+grad)
+//println("grad = "+grad)
+
+/*
+  Part 3: Implement regularization with the cost function and gradients.
+
+
+         Hint: You can implement this around the code for
+               backpropagation. That is, you can compute the gradients for
+               the regularization separately and then add them to Theta1_grad
+               and Theta2_grad from Part 2.
+
+*/
+	//calculate regularized cost function
+	
+var T1=DenseMatrix.tabulate[Double](Theta1.numRows,Theta1.numCols)(
+			(i,j)=>Theta1(i,j)
+    )//clone Theta1
+var T2=DenseMatrix.tabulate[Double](Theta2.numRows,Theta2.numCols)(
+			(i,j)=>Theta2(i,j)
+    )//clone Theta2
+	//println("T1 patch = \n"+T1(0 to 5,0 to 5))
+	//println("T2 patch = \n"+T2(0 to 5,0 to 5))
+T1(::,0):=DenseVector.zeros[Double](T1.numRows); //make first column of T1 zero
+T2(::,0):=DenseVector.zeros[Double](T2.numRows);  //make first column of T2 zero
+	//println("T1 patch = \n"+T1(0 to 5,0 to 5))
+	//println("T2 patch = \n"+T2(0 to 5,0 to 5))
+T1=T1:^2;
+T2=T2:^2;
+	//println("T1 patch = \n"+T1(0 to 5,0 to 5))
+	//println("T2 patch = \n"+T2(0 to 5,0 to 5))
+J+=( lambda/(2*m) ) * (T1.data.sum + T2.data.sum);
+
 (J,grad)
 
   }
