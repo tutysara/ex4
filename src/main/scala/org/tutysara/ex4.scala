@@ -54,9 +54,10 @@ printf("Loading and Visualizing Data ...\n")
 val FILE_DIR="/home/tutysra/testdata/ex4"
 val FILE_DATA=FILE_DIR+"/ex4data1.mat"
 val FILE_WEIGHTS=FILE_DIR+"/ex4weights.mat"
-val varX=load(FILE_DATA,"X");
-val X=varX.get.asInstanceOf[MLDouble].asMatrix //check and get
-
+val varMap=load(FILE_DATA,"X","y");
+val X=varMap.get("X").get.get.asInstanceOf[MLDouble].asMatrix //check and get
+val y=varMap.get("y").get.get.asInstanceOf[MLDouble].asVector //check and get
+println("y="+y)
 val m =X.numRows
 
 //Randomly select 100 data points to display
@@ -67,7 +68,7 @@ val X_sel=DenseMatrix.tabulate[Double](100, X.numCols)(
 displayData(X_sel);
 
 printf("Program paused. Press enter to continue.\n");
-pause();
+//pause();
 /* 
  ================ Part 2: Loading Pameters ================
  In this part of the exercise, we load some pre-initialized 
@@ -77,11 +78,55 @@ printf("\nLoading Saved Neural Network Parameters ...\n")
 
 // Load the weights into variables Theta1 and Theta2
 val varMap_weights=load(FILE_WEIGHTS,"Theta1","Theta2");
-val Theta1=varMap_weights.get("Theta1").get.get.asInstanceOf[MLDouble].asVector
-val Theta2=varMap_weights.get("Theta2").get.get.asInstanceOf[MLDouble].asVector
+val Theta1=varMap_weights.get("Theta1").get.get.asInstanceOf[MLDouble].asMatrix
+val Theta2=varMap_weights.get("Theta2").get.get.asInstanceOf[MLDouble].asMatrix
+	println("Theta1 and Theta2 patches when they are loaded")
+	println("Theta1 = "+Theta1.numRows,Theta1.numCols)
+	println("Theta2 = "+Theta2.numRows,Theta2.numCols)
+	//println("Theta1 patch = \n"+Theta1(0 to 5,0 to 5))
+	println("Theta2 patch 1= \n"+Theta2(0 to 9,0 to 7))
+	println("Theta2 patch 2= \n"+Theta2(0 to 9,8 to 15))
+	println("Theta2 patch 3= \n"+Theta2(0 to 9,16 to 23))
+	println("Theta2 patch 3= \n"+Theta2(0 to 9,24 to 25))
+	
+	//println("Theta2 whole = \n"+Theta2)
+	
+	
 // Unroll parameters 
-val nn_params = (Theta1.toArray ++ Theta2.toArray).asVector
+val ary1=Theta1.data.flatten
+val ary2=Theta2.data.flatten
+println("Flattened Theta2 whole = \n"+ary2.mkString("\n"))
+val nn_params=(ary1 ++ ary2).asVector
+println("nn_params(30)="+nn_params(30))
+//pause()
+// val nn_params = ( (Theta1.data.flatten) ++ (Theta2.data.flatten)).asVector @check - this doesn't work
 
+/*
+   ================ Part 3: Compute Cost (Feedforward) ================
+ 
+  To the neural network, you should first start by implementing the
+  feedforward part of the neural network that returns the cost only. You
+  should complete the code in nnCostFunction.m to return cost. After
+  implementing the feedforward to compute the cost, you can verify that
+  your implementation is correct by verifying that you get the same cost
+  as us for the fixed debugging parameters.
+
+  We suggest implementing the feedforward cost *without* regularization
+  first so that it will be easier for you to debug. Later, in part 4, you
+  will get to implement the regularized cost.
+*/
+printf("\nFeedforward Using Neural Network ...\n")
+
+// Weight regularization parameter (we set this to 0 here).
+val lambda3 = 0;
+val (j1,grad)= nnCostFunction(nn_params, input_layer_size, hidden_layer_size,
+                   num_labels, X.toDense, y, lambda3); //@check why is capital J1 not allowed?
+
+printf("Cost at parameters (loaded from ex4weights): %f "+
+         "\n(this value should be about 0.287629)\n", j1); 
+
+printf("\nProgram paused. Press enter to continue.\n");
+pause();
   } 
 
 }
