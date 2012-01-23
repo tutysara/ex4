@@ -1,5 +1,16 @@
 package org.tutysara
 
+import scalala.scalar._;
+import scalala.tensor.::;
+import scalala.tensor.mutable._;
+import scalala.tensor.dense._;
+import scalala.tensor.sparse._;
+import scalala.library.Library._;
+import scalala.library.LinearAlgebra._;
+import scalala.library.Statistics._;
+import scalala.library.Plotting._;
+import scalala.operators.Implicits._;
+
 object Util {
 
   /*
@@ -24,6 +35,13 @@ def shuffle[T](array: Array[T]): Array[T] = {
         }
         return array
 }
-  def main(args: Array[String]): Unit = {}
 
+def reshape(in:DenseVectorCol[Double],rows:Int,cols:Int):DenseMatrix[Double]={
+	  DenseMatrix.tabulate[Double](rows,cols)(    
+      (i,j)=>in((j*(rows)+i))
+  )
+}
+  def main(args: Array[String]): Unit = {
+  		println(reshape(Array(0.0,1,2,3,4,5,6,7, 0.8).asVector,3,3))
+  }
 }

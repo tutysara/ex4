@@ -126,7 +126,7 @@ printf("Cost at parameters (loaded from ex4weights): %f "+
          "\n(this value should be about 0.287629)\n", j1); 
 
 printf("\nProgram paused. Press enter to continue.\n");
-pause();
+//pause();
 
 /*
   =============== Part 4: Implement Regularization ===============
@@ -147,7 +147,7 @@ printf("Cost at parameters (loaded from ex4weights): %f "+
          "\n(this value should be about 0.383770)\n", j4);
 
 printf("Program paused. Press enter to continue.\n");
-pause();
+//pause();
 /*
   ================ Part 5: Sigmoid Gradient  ================
 
@@ -165,7 +165,62 @@ println( g);
 printf("\n\n");
 
 printf("Program paused. Press enter to continue.\n");
+//pause();
+
+/*
+   ================ Part 6: Initializing Pameters ================
+ 
+  In this part of the exercise, you will be starting to implment a two
+  layer neural network that classifies digits. You will start by
+  implementing a function to initialize the weights of the neural network
+  (randInitializeWeights.m)
+*/
+printf("\nInitializing Neural Network Parameters ...\n")
+
+val initial_Theta1 = randInitializeWeights(input_layer_size, hidden_layer_size);
+val initial_Theta2 = randInitializeWeights(hidden_layer_size, num_labels);
+
+// Unroll parameters
+val initial_nn_params = (initial_Theta1.data ++ initial_Theta2.data).asVector;
+
+/*
+   =============== Part 7: Implement Backpropagation ===============
+
+  Once your cost matches up with ours, you should proceed to implement the
+  backpropagation algorithm for the neural network. You should add to the
+  code you've written in nnCostFunction.m to return the partial
+  derivatives of the parameters.
+
+*/
+printf("\nChecking Backpropagation... \n");
+
+//  Check gradients by running checkNNGradients
+checkNNGradients();
+
+printf("\nProgram paused. Press enter to continue.\n");
+//pause();
+/*
+   =============== Part 8: Implement Regularization ===============
+
+  Once your backpropagation implementation is correct, you should now
+  continue to implement the regularization with the cost and gradient.
+
+*/
+printf("\nChecking Backpropagation (w/ Regularization) ... \n")
+
+// Check gradients by running checkNNGradients
+val lambda8 = 3;
+checkNNGradients(lambda8);
+
+// Also output the costFunction debugging values
+val(debug_J,_)  = nnCostFunction(nn_params, input_layer_size,
+                          hidden_layer_size, num_labels, X.toDense, y, lambda8);
+
+printf("\n\nCost at (fixed) debugging parameters (w/ lambda = 10): %f "+
+         "\n(this value should be about 0.576051)\n\n", debug_J);
+
+printf("Program paused. Press enter to continue.\n");
 pause();
-  } 
+  }   
 
 }
