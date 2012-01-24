@@ -27,7 +27,7 @@ object debugInitializeWeights {
   def apply(fan_out:Int, fan_in:Int):DenseMatrix[Double]={
     DenseMatrix.tabulate[Double](fan_out,fan_in+1)(
      // (i,j)=>sin((i*(fan_in+1)+j+1))
-      (i,j)=>sin((j*(fan_out)+i+1))
+      (i,j)=>sin((j*(fan_out)+i+1))/10
   )
   }
   def main(args: Array[String]): Unit = {
