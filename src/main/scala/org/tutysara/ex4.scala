@@ -12,8 +12,9 @@ import scalala.library.LinearAlgebra._;
 import scalala.library.Statistics._;
 import scalala.library.Plotting._;
 import scalala.operators.Implicits._;
-import org.tutysara.Util.pause
-import org.tutysara.Util.shuffle
+import org.tutysara.Util._
+
+
 /*
   Machine Learning Online Class - Exercise 4 Neural Network Learning
 
@@ -65,7 +66,7 @@ val shuffled_idx = shuffle(0 until X.numRows toArray)
 val X_sel=DenseMatrix.tabulate[Double](100, X.numCols)( 
 			(i,j) =>X(shuffled_idx(i),j) //shuffle rows
 			)
-displayData(X_sel);
+//displayData(X_sel); - don't show for now
 
 printf("Program paused. Press enter to continue.\n");
 //pause();
@@ -81,6 +82,8 @@ val varMap_weights=load(FILE_WEIGHTS,"Theta1","Theta2");
 val Theta1=varMap_weights.get("Theta1").get.get.asInstanceOf[MLDouble].asMatrix
 val Theta2=varMap_weights.get("Theta2").get.get.asInstanceOf[MLDouble].asMatrix
 	println("Theta1 and Theta2 patches when they are loaded")
+
+	println("Theta1 = \n"+Theta1)
 	println("Theta1 = "+Theta1.numRows,Theta1.numCols)
 	println("Theta2 = "+Theta2.numRows,Theta2.numCols)
 	//println("Theta1 patch = \n"+Theta1(0 to 5,0 to 5))
@@ -95,8 +98,14 @@ val Theta2=varMap_weights.get("Theta2").get.get.asInstanceOf[MLDouble].asMatrix
 // Unroll parameters 
 val ary1=Theta1.data.flatten
 val ary2=Theta2.data.flatten
-println("Flattened Theta2 whole = \n"+ary2.mkString("\n"))
-val nn_params=(ary1 ++ ary2).asVector
+//println("Flattened Theta2 whole = \n"+ary2.mkString("\n"))
+val Theta1_vec=linearize(Theta1.toDense)
+val Theta2_vec=linearize(Theta2.toDense)
+val res=Theta1_vec.data ++ Theta2_vec.data
+
+//val nn_params=(ary1 ++ ary2).asVector
+val nn_params=res.asVector
+println("nn_params = \n"+nn_params)
 println("nn_params(30)="+nn_params(30))
 //pause()
 // val nn_params = ( (Theta1.data.flatten) ++ (Theta2.data.flatten)).asVector @check - this doesn't work
@@ -221,6 +230,7 @@ printf("\n\nCost at (fixed) debugging parameters (w/ lambda = 10): %f "+
 
 printf("Program paused. Press enter to continue.\n");
 pause();
+
   }   
 
 }

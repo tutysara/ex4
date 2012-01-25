@@ -11,6 +11,7 @@ import scalala.library.Statistics._;
 import scalala.library.Plotting._;
 import scalala.operators.Implicits._;
 import scalala.generic.math.Library._
+import org.tutysara.Util._
 /*
   CHECKNNGRADIENTS Creates a small neural network to check the
 backpropagation gradients
@@ -68,6 +69,8 @@ printf("If your backpropagation implementation is correct, then \n"+
   }
   def main(args: Array[String]): Unit = {
     checkNNGradients()
+    pause()
+    checkNNGradients(3)
   }
 
 }

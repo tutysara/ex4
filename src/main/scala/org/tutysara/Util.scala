@@ -41,7 +41,31 @@ def reshape(in:DenseVectorCol[Double],rows:Int,cols:Int):DenseMatrix[Double]={
       (i,j)=>in((j*(rows)+i))
   )
 }
+
+def linearize(in:DenseMatrix[Double]):DenseVectorCol[Double]={
+  val res=DenseVectorCol.tabulate[Double](in.numRows*in.numCols)(
+      (n)=>{
+        //val i:Int=(n/in.numRows).floor.toInt
+        //val j:Int=(n%in.numRows)
+        //in(i,j)
+        
+        val j1:Int=(n/in.numRows).floor.toInt
+        val i1:Int=(n%in.numRows)
+        in(i1,j1)
+      }
+      )
+  
+  
+  res
+}
   def main(args: Array[String]): Unit = {
-  		println(reshape(Array(0.0,1,2,3,4,5,6,7, 0.8).asVector,3,3))
+  		val mat1=reshape(Array(0.0,1,2,3,4,5,6,7, 8.0).asVector,3,3)
+  		val mat2=reshape(Array(0.0,1,2,3,4,5).asVector,2,3)
+  		println(mat1)
+  		println(mat2)
+  		val vec1=linearize(mat1)
+  		val vec2=linearize(mat2)
+  		println(vec1)
+  		println(vec2)
   }
 }

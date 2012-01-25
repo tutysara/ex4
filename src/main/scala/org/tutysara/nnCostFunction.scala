@@ -173,8 +173,8 @@ object nnCostFunction {
 
 		D2=D2:/m;
 		D1=D1:/m;
-		println("D1 = \n"+D1)
-		println("D2 = \n"+D2)
+		println("D1 = \n"+D1) //D1 ok
+		println("D2 = \n"+D2) //D2 ok
 		Theta1_grad=DenseMatrix.tabulate[Double](D1.numRows,D1.numCols)( // use regularized result after completing regularization
 				(i,j)=>D1(i,j)
 		)//clone D1 
@@ -224,15 +224,29 @@ object nnCostFunction {
 		//removing bias terms	
 		T1_no_bias(::,0):=DenseVectorCol.zeros[Double](T1_no_bias.numRows) //make first column of T1 zero  
 		T2_no_bias(::,0):=DenseVectorCol.zeros[Double](T2_no_bias.numRows) //make first column of T2 zero
-
-		//Theta1_grad=D1:+ T1_no_bias:*(lambda/m)
-		//Theta2_grad=D2:+ T2_no_bias:*(lambda/m);
-
-
+		println("T1_no_bias = \n"+T1_no_bias)
+		println("T2_no_bias = \n"+T2_no_bias) //correct until this
+		
+		
+		
+		Theta1_grad=D1 :+ (T1_no_bias:*(lambda/m))
+		Theta2_grad=D2 :+(T2_no_bias:*(lambda/m))
+		
+		
+		
+		
+		println("Theta1_grad = \n"+Theta1_grad)
+		println("Theta2_grad = \n"+Theta2_grad)
+		//println("mul_lambda = \n"+mul_lambda)
+		val t1g=D1:+(T1_no_bias)
+		val t2g=D2:+(T2_no_bias)
+		
+		println("t1g = \n"+t1g)
+		println("t2g = \n"+t2g)
 		//println("D1 patch = \n"+D1(0 to 2,0 to 2))
 		//println("D2 patch = \n"+D2(0 to 2,0 to 2))
-		println("Theta1_gradpatch = \n"+Theta1_grad(0 to 2,0 to 2))
-		println("Theta2_grad patch = \n"+Theta2_grad(0 to 2,0 to 2))
+		//println("Theta1_gradpatch = \n"+Theta1_grad(0 to 2,0 to 2))
+		//println("Theta2_grad patch = \n"+Theta2_grad(0 to 2,0 to 2))
 
 		val grad=(Theta1_grad.data ++ Theta2_grad.data).asVector
 		(J,grad)
