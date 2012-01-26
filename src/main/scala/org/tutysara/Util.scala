@@ -1,3 +1,4 @@
+
 package org.tutysara
 
 import scalala.scalar._;
@@ -44,10 +45,7 @@ def reshape(in:DenseVectorCol[Double],rows:Int,cols:Int):DenseMatrix[Double]={
 
 def linearize(in:DenseMatrix[Double]):DenseVectorCol[Double]={
   val res=DenseVectorCol.tabulate[Double](in.numRows*in.numCols)(
-      (n)=>{
-        //val i:Int=(n/in.numRows).floor.toInt
-        //val j:Int=(n%in.numRows)
-        //in(i,j)
+      (n)=>{  
         
         val j1:Int=(n/in.numRows).floor.toInt
         val i1:Int=(n%in.numRows)

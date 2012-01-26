@@ -34,19 +34,13 @@ import scalala.tensor.::
 			// You need to return the following variables correctly 
 			val p = DenseVectorCol.zeros[Double](m)
 			
-			//println("Theta1 = \n"+Theta1)
-			//println("Theta2 = \n"+Theta2)
-			
 			val h1 = sigmoid1(DenseMatrix.horzcat(DenseMatrix.ones[Double](X.numRows, 1), X) * Theta1.t);			
-			val h2 = sigmoid1(DenseMatrix.horzcat(DenseMatrix.ones[Double](h1.numRows, 1), h1) * Theta2.t);
+			val h2 = sigmoid1(DenseMatrix.horzcat(DenseMatrix.ones[Double](h1.numRows, 1), h1) * Theta2.t);			
 			
-			//println("h1 = \n"+h1)		
-			//[dummy, p] = max(h2, [], 2);
-			//println("h2 = \n" + h2)
 			
-			val res = maxindex(h2) //since index starts from 1 on octave and 0 is mapped to 10
-			//println("res = \n" + res)
-			res
+			val res = maxindex(h2) 
+			
+			res:+=1//since index starts from 1 on octave and 0 is mapped to 10
 			// =========================================================================
 	}
 	def main(args: Array[String]): Unit = {
@@ -62,10 +56,7 @@ import scalala.tensor.::
 
 			val Theta2_8_2 = varMap2 .get("Theta2").get.get.asInstanceOf[MLDouble].asMatrix
 			val pred = predict(Theta1_8_2.toDense, Theta2_8_2.toDense, X.toDense);
-			pred:+=1 //to compensate for the 1 index
-			//println("pred = \n" + pred)
-			//println("y = \n"+y)
-			//println("pred = \n"+pred)
+			
 			val pred_res = DenseVectorCol.tabulate[Double](pred.length)(
 					(i) => if (y(i) == pred(i)) 1 else 0)
 			println("pred_res = \n" + pred_res)

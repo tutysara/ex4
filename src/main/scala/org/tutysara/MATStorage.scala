@@ -50,27 +50,25 @@ trait MATStorage {
 				if(!file.isDefined)
 					return None
 					//if it has reached this point then file should contain value
-					val matContent=
-						try{
-							val res=reader.read(file.get,filter,MATStorage.policy)
-							if(res !=null)
-								Option(res)
-								else
-									None
-						}catch{
-						case ex:IOException =>println("IO Exception ")
-						None
-						}
-						//proceed only when we have a value from the file
+			val matContent=
+				try{
+					val res=reader.read(file.get,filter,MATStorage.policy)
+					if(res !=null)
+						Option(res)
+						else
+							None
+				}catch{
+				case ex:IOException =>println("IO Exception ")
+				None
+				}
+				//proceed only when we have a value from the file
 
-						if(!matContent.isDefined)
-							return None
-							//Some(convertToScalala(matContent.get.get(varName)))
-
-							Some(matContent.get.get(varName))
-					//val mlAry=matContent.get.get(varName)
-					//convertToArray(mlAry)
-						//load("y","/home/tutysra/ex4data.mat")
+			if(!matContent.isDefined)
+				return None
+				
+	
+			Some(matContent.get.get(varName))
+					
 	}
 
 	/*
@@ -110,7 +108,7 @@ trait MATStorage {
 	 * MLArray read from the .mat file
 	 * @return
 	 * Values of the MLArray converted into a datatype for easy use Scalala
-	 */
+	 
 	//Have implicits to convert MLArray into DenseMatrix or DenseVectorRow or DenseVectorCol
 	private def convertToScalala(in:MLArray)={
 
@@ -246,7 +244,7 @@ trait MATStorage {
 	     case iu8:MLUInt8 => iu8.getArray()
 	   }
 	  }
-	 
+	 */
 //@todo
 //put all implicits in a common place
 implicit def enrichMLDouble(in:MLDouble)={

@@ -32,13 +32,13 @@ object displayData {
 		//Compute rows, cols
 		val m=X.numRows
 		val n=X.numCols
-		//printf("\nm = %d, n= %d",m,n)
+		
 		val example_height = (n / example_width)
-		//printf("\nexample_height = %d, example_width= %d",example_height,example_width)
+		
 		//Compute number of items to display
 		val display_rows = sqrt(m).floor.toInt;
 		val display_cols = (m / display_rows).ceil.toInt;
-		printf("\ndisplay_rows = %d, display_cols= %d",display_rows,display_cols)
+		
 		//Between images padding
 		val pad = 1;
 		//Setup blank display
@@ -51,7 +51,7 @@ object displayData {
 		for (j  <-0 until display_rows;if(run)){
 			for (i <- 0 until display_cols;if (run)){
 				
-				//printf("\nj = %d, i=%d, curr_ex=%d, run = %b",j,i,curr_ex,run)
+				
 				//Copy the patch
 
 				//Get the max value of the patch
@@ -60,16 +60,13 @@ object displayData {
 				val patch=DenseMatrix.tabulate[Double](example_height,example_width)( //divide by max value
 						(i,j)=>patch_col((i*example_height)+j)/max_val
 				)
-				///display_array(pad + (j - 1) * (example_height + pad) :+ ( 0 to example_height), ...
-				//             pad + (i - 1) * (example_width + pad) + (1:example_width)) = ...
-				//				reshape(X(curr_ex, :), example_height, example_width) / max_val;
-				//println("patch = "+patch)
+				
 				display_array((pad + j * (example_height + pad)) until (pad + j * (example_height + pad)+example_height)  ,
 						(pad + i * (example_width + pad)) until (pad + i * (example_width + pad)+example_width)
 				)  :=patch
 
 				curr_ex = curr_ex + 1;
-				//printf("\nj = %d, i=%d, curr_ex=%d",j,i,curr_ex)
+				
 				
 				if (curr_ex >=m){ //do until m since the index starts at 0
 					run=false; 

@@ -35,22 +35,11 @@ object nnCostFunction {
 		// Reshape nn_params back into the parameters Theta1 and Theta2, the weight matrices
 		// for our 2 layer neural network
 
-		val Theta1=reshape(nn_params,hidden_layer_size,input_layer_size+1)
-		//println("Theta1 = "+Theta1.numRows,Theta1.numCols)
-		//println(Theta1)
+		val Theta1=reshape(nn_params,hidden_layer_size,input_layer_size+1)		
 		val offset_theta1=hidden_layer_size*(input_layer_size+1)
 
-
 		val nn_params_offsetted=nn_params(offset_theta1 until nn_params.length)
-		val Theta2=reshape(nn_params_offsetted,num_labels,hidden_layer_size+1)
-		//println("Theta2 = "+Theta2.numRows,Theta2.numCols)
-		// println(Theta2)
-
-		// println("Theta2 patch 1= \n"+Theta2(0 to 9,0 to 7))
-		//println("Theta2 patch 2= \n"+Theta2(0 to 9,8 to 15))
-		//println("Theta2 patch 3= \n"+Theta2(0 to 9,16 to 23))
-		//println("Theta2 patch 3= \n"+Theta2(0 to 9,24 to 25))
-
+		val Theta2=reshape(nn_params_offsetted,num_labels,hidden_layer_size+1)	
 
 		// Setup some useful variables
 		val m = X.numRows
@@ -74,57 +63,33 @@ object nnCostFunction {
 
 		 */
 		
-		//println("Theta1 patch = \n"+Theta1(0 to 5,0 to 5))
-		//println("Theta2 patch = \n"+Theta2(0 to 5,0 to 5))
-		// println("X = "+X.numRows,X.numCols)
-		// println("X patch = \n"+X(0 to 5,0 to 5))
-		//println("X = \n"+X)
+		
 		val X_new = DenseMatrix.horzcat( DenseMatrix.ones[Double](X.numRows,1),X); //add bias terms
-		//println("X_new = "+X_new.numRows,X_new.numCols)
-		// println("X_new patch = \n"+X_new(0 to 5,0 to 5))
-		val test=Theta1*X_new.t// 5x5 * (4x5)'
-		//println("test = \n"+test)
-		//println("X_new = \n"+X_new)
-		//calculate z_2, a_2, z_3, a_3
-
-		//println("Theta1 = \n"+Theta1)
-		val Z_2=Theta1*X_new.t; //z_2 for all examples with one column per example
-		//println("Z_2 =\n"+Z_2) //z_2 is wrong from second row
-		//pause()
-		val A_2=sigmoid1(Z_2);
-		// println("A_2 ="+A_2.numRows,A_2.numCols)
-		//println("A_2=\n"+A_2)
-		val A_2_new=DenseMatrix.vertcat( DenseMatrix.ones[Double](1,A_2.numCols),A_2); //add bias terms
-		//println("A_2_new ="+A_2_new.numRows,A_2_new.numCols)
+		
+		
+		val Z_2=Theta1*X_new.t; //z_2 for all examples with one column per example	
+		val A_2=sigmoid1(Z_2);		
+		val A_2_new=DenseMatrix.vertcat( DenseMatrix.ones[Double](1,A_2.numCols),A_2); //add bias terms		
 		val Z_3=Theta2*A_2_new;
 		val A_3=sigmoid1(Z_3);
 
 		//calculate Y for all examples
-
-
 		val Y=DenseMatrix.tabulate[Int](num_labels,m)(//result matrix
 				(i,j)=> { //printf("\ni=%d,j=%d,y(j)=%f",i,j,y(j));
 					if(y(j)==(i+1)) 1 else 0
 				}
 		)
-		//println("Y.size = "+Y.numRows, Y.numCols)
-		//println("Y = "+Y)
+		
 		//calculate cost for all classes in an example and all examples
 
-		//val J_all=Y.*log(A_3)+(ones(size(Y))-Y).*log(ones(size(A_3))-A_3);
+		
 		val J_all=Y:*log(A_3):+
 		(	(DenseMatrix.ones[Int](Y.numRows,Y.numCols):-Y):*
 				log( DenseMatrix.ones[Double](A_3.numRows,A_3.numCols):-A_3)
 		)
-		//println("J_all = "+J_all)//J_all is wrong
-
-		//val sm1=J_all.data.sum//-26701.827321 should be -1438.145826
-		//val sm2=(sum(J_all).toArray).sum
-		//printf("sm1=%f,sm2=%f",sm1,sm2)
+		
 		J = -(1.0/m) * J_all.data.sum; //sum all the data
-		//println("J = "+J)
-
-		//println("grad = "+grad)
+		
 
 		/*
    Part 2: Implement the backpropagation algorithm to compute the gradients
@@ -144,8 +109,7 @@ object nnCostFunction {
                first time.
 		 */
 
-		// we have already calculated z2, a2, z3, a3 for the whole set of examples so, use loops only from point 4 for accumulating
-
+		
 		//caluclate delta3 for all examples
 		val Delta3=A_3 - Y; // has 5000 columns, with one column for each example
 		//calculate delta2 for all examples
@@ -156,25 +120,16 @@ object nnCostFunction {
 		//calculate Capital delta for the examples
 		var D2=DenseMatrix.zeros[Double](Theta2.numRows,Theta2.numCols)//initialize accumulators
 		var D1=DenseMatrix.zeros[Double](Theta1.numRows,Theta1.numCols)
-		//println("Delta3 = "+Delta3.numRows,Delta3.numCols)
-		//println("Delta2 = "+Delta2.numRows,Delta2.numCols)
-		//println("A_2 = "+A_2.numRows,A_2.numCols)
-		//println("X_new = "+X_new.numRows,X_new.numCols)
-		//println("D2 = "+D2.numRows,D2.numCols)
-
-		//println("Delta3= \n"+Delta3)
-		//println("A_2_new = \n"+A_2_new)
-		//println("Delta2 = \n"+Delta2)
+		
 
 		for (i <- 0 until m){//using loop for accumulation
-			D2+=Delta3(::,i) * A_2_new(::,i).t; //3x5 X 5x6
-			D1+=Delta2(::,i)*X_new(i,::); //5x5 X 5x4
+			D2+=Delta3(::,i) * A_2_new(::,i).t; 
+			D1+=Delta2(::,i)*X_new(i,::); 
 		}
 
 		D2=D2:/m;
 		D1=D1:/m;
-		//println("D1 = \n"+D1) //D1 ok
-		//println("D2 = \n"+D2) //D2 ok
+		
 		Theta1_grad=DenseMatrix.tabulate[Double](D1.numRows,D1.numCols)( // use regularized result after completing regularization
 				(i,j)=>D1(i,j)
 		)//clone D1 
@@ -200,16 +155,13 @@ object nnCostFunction {
 		var T2=DenseMatrix.tabulate[Double](Theta2.numRows,Theta2.numCols)(
 				(i,j)=>Theta2(i,j)
 		)//clone Theta2
-		//println("T1 patch = \n"+T1(0 to 5,0 to 5))
-		//println("T2 patch = \n"+T2(0 to 5,0 to 5))
+		
 		T1(::,0):=DenseVector.zeros[Double](T1.numRows); //make first column of T1 zero
 		T2(::,0):=DenseVector.zeros[Double](T2.numRows);  //make first column of T2 zero
-		//println("T1 patch = \n"+T1(0 to 5,0 to 5))
-		//println("T2 patch = \n"+T2(0 to 5,0 to 5))
+		
 		T1=T1:^2;
 		T2=T2:^2;
-		//println("T1 patch = \n"+T1(0 to 5,0 to 5))
-		//println("T2 patch = \n"+T2(0 to 5,0 to 5))
+		
 		J+=( lambda/(2*m) ) * (T1.data.sum + T2.data.sum); //regularized cost
 
 		//calculate regularized gradients
@@ -224,29 +176,13 @@ object nnCostFunction {
 		//removing bias terms	
 		T1_no_bias(::,0):=DenseVectorCol.zeros[Double](T1_no_bias.numRows) //make first column of T1 zero  
 		T2_no_bias(::,0):=DenseVectorCol.zeros[Double](T2_no_bias.numRows) //make first column of T2 zero
-		//println("T1_no_bias = \n"+T1_no_bias)
-		//println("T2_no_bias = \n"+T2_no_bias) //correct until this
-		
-		
+			
 		
 		Theta1_grad=D1 :+ (T1_no_bias:*(lambda/m))
-		Theta2_grad=D2 :+(T2_no_bias:*(lambda/m))
+		Theta2_grad=D2 :+(T2_no_bias:*(lambda/m))		
 		
-		
-		
-		
-		//println("Theta1_grad = \n"+Theta1_grad)
-		//println("Theta2_grad = \n"+Theta2_grad)
-		//println("mul_lambda = \n"+mul_lambda)
 		val t1g=D1:+(T1_no_bias)
-		val t2g=D2:+(T2_no_bias)
-		
-		//println("t1g = \n"+t1g)
-		//println("t2g = \n"+t2g)
-		//println("D1 patch = \n"+D1(0 to 2,0 to 2))
-		//println("D2 patch = \n"+D2(0 to 2,0 to 2))
-		//println("Theta1_gradpatch = \n"+Theta1_grad(0 to 2,0 to 2))
-		//println("Theta2_grad patch = \n"+Theta2_grad(0 to 2,0 to 2))
+		val t2g=D2:+(T2_no_bias)		
 
 		val grad=(Theta1_grad.data ++ Theta2_grad.data).asVector
 		(J,grad)

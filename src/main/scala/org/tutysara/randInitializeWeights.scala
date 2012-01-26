@@ -39,12 +39,11 @@ object randInitializeWeights {
 
 */
 
-// Randomly initialize the weights to small values
-		  val epsilon_init = 0.12;
-    // You need to return the following variables correctly 
-    
-	val W=DenseMatrix.rand(L_out,1+L_in)
-	W:*2*epsilon_init-epsilon_init
+		  // Randomly initialize the weights to small values
+		val epsilon_init = 0.12;
+		  // You need to return the following variables correctly     
+		val W=DenseMatrix.rand(L_out,1+L_in)
+		W:*2*epsilon_init-epsilon_init
   }
   def main(args: Array[String]): Unit = {}
 

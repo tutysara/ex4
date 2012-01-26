@@ -64,15 +64,15 @@ val y=varMap.get("y").get.get.asInstanceOf[MLDouble].asVector //check and get
 println("y="+y)
 val m =X.numRows
 
-//Randomly select 100 data points to display
+	//Randomly select 100 data points to display
 val shuffled_idx = shuffle(0 until X.numRows toArray)
 val X_sel=DenseMatrix.tabulate[Double](100, X.numCols)( 
 			(i,j) =>X(shuffled_idx(i),j) //shuffle rows
 			)
-//displayData(X_sel); - don't show for now
+displayData(X_sel);
 
 printf("Program paused. Press enter to continue.\n");
-//pause();
+pause();
 /* 
  ================ Part 2: Loading Pameters ================
  In this part of the exercise, we load some pre-initialized 
@@ -80,37 +80,22 @@ printf("Program paused. Press enter to continue.\n");
 */
 printf("\nLoading Saved Neural Network Parameters ...\n")
 
-// Load the weights into variables Theta1 and Theta2
+	// Load the weights into variables Theta1 and Theta2
 val varMap_weights=load(FILE_WEIGHTS,"Theta1","Theta2");
 val Theta1=varMap_weights.get("Theta1").get.get.asInstanceOf[MLDouble].asMatrix
 val Theta2=varMap_weights.get("Theta2").get.get.asInstanceOf[MLDouble].asMatrix
-	//println("Theta1 and Theta2 patches when they are loaded")
-
-	//println("Theta1 = \n"+Theta1)
-	//println("Theta1 = "+Theta1.numRows,Theta1.numCols)
-	//println("Theta2 = "+Theta2.numRows,Theta2.numCols)
-	//println("Theta1 patch = \n"+Theta1(0 to 5,0 to 5))
-	println("Theta2 patch 1= \n"+Theta2(0 to 9,0 to 7))
-	println("Theta2 patch 2= \n"+Theta2(0 to 9,8 to 15))
-	println("Theta2 patch 3= \n"+Theta2(0 to 9,16 to 23))
-	println("Theta2 patch 3= \n"+Theta2(0 to 9,24 to 25))
-	
-	//println("Theta2 whole = \n"+Theta2)
 	
 	
-// Unroll parameters 
+	
+	// Unroll parameters 
 val ary1=Theta1.data.flatten
 val ary2=Theta2.data.flatten
-//println("Flattened Theta2 whole = \n"+ary2.mkString("\n"))
 val Theta1_vec=linearize(Theta1.toDense)
 val Theta2_vec=linearize(Theta2.toDense)
 val res=Theta1_vec.data ++ Theta2_vec.data
-
-//val nn_params=(ary1 ++ ary2).asVector
 val nn_params=res.asVector
-println("nn_params = \n"+nn_params)
-println("nn_params(30)="+nn_params(30))
-//pause()
+
+pause()
 // val nn_params = ( (Theta1.data.flatten) ++ (Theta2.data.flatten)).asVector @check - this doesn't work
 
 /*
@@ -129,7 +114,7 @@ println("nn_params(30)="+nn_params(30))
 */
 printf("\nFeedforward Using Neural Network ...\n")
 
-// Weight regularization parameter (we set this to 0 here).
+	// Weight regularization parameter (we set this to 0 here).
 val lambda3 = 0;
 val (j1,grad)= nnCostFunction(nn_params, input_layer_size, hidden_layer_size,
                    num_labels, X.toDense, y, lambda3); //@check why is capital J1 not allowed?
@@ -138,7 +123,7 @@ printf("Cost at parameters (loaded from ex4weights): %f "+
          "\n(this value should be about 0.287629)\n", j1); 
 
 printf("\nProgram paused. Press enter to continue.\n");
-//pause();
+pause();
 
 /*
   =============== Part 4: Implement Regularization ===============
@@ -149,7 +134,7 @@ printf("\nProgram paused. Press enter to continue.\n");
 */
 printf("\nChecking Cost Function (w/ Regularization) ... \n")
 
-// Weight regularization parameter (we set this to 1 here).
+	// Weight regularization parameter (we set this to 1 here).
 val lambda4 = 1;
 
 val (j4,grad4) = nnCostFunction(nn_params, input_layer_size, hidden_layer_size,
@@ -159,7 +144,7 @@ printf("Cost at parameters (loaded from ex4weights): %f "+
          "\n(this value should be about 0.383770)\n", j4);
 
 printf("Program paused. Press enter to continue.\n");
-//pause();
+pause();
 /*
   ================ Part 5: Sigmoid Gradient  ================
 
@@ -177,7 +162,7 @@ println( g);
 printf("\n\n");
 
 printf("Program paused. Press enter to continue.\n");
-//pause();
+pause();
 
 /*
    ================ Part 6: Initializing Pameters ================
@@ -192,7 +177,7 @@ printf("\nInitializing Neural Network Parameters ...\n")
 val initial_Theta1 = randInitializeWeights(input_layer_size, hidden_layer_size);
 val initial_Theta2 = randInitializeWeights(hidden_layer_size, num_labels);
 
-// Unroll parameters
+	// Unroll parameters
 val initial_nn_params = (initial_Theta1.data ++ initial_Theta2.data).asVector;
 
 /*
@@ -206,11 +191,11 @@ val initial_nn_params = (initial_Theta1.data ++ initial_Theta2.data).asVector;
 */
 printf("\nChecking Backpropagation... \n");
 
-//  Check gradients by running checkNNGradients
+	//  Check gradients by running checkNNGradients
 checkNNGradients();
 
 printf("\nProgram paused. Press enter to continue.\n");
-//pause();
+pause();
 /*
    =============== Part 8: Implement Regularization ===============
 
@@ -220,11 +205,11 @@ printf("\nProgram paused. Press enter to continue.\n");
 */
 printf("\nChecking Backpropagation (w/ Regularization) ... \n")
 
-// Check gradients by running checkNNGradients
+	// Check gradients by running checkNNGradients
 val lambda8 = 3;
 checkNNGradients(lambda8);
 
-// Also output the costFunction debugging values
+	// Also output the costFunction debugging values
 val(debug_J,_)  = nnCostFunction(nn_params, input_layer_size,
                           hidden_layer_size, num_labels, X.toDense, y, lambda8);
 
@@ -232,7 +217,7 @@ printf("\n\nCost at (fixed) debugging parameters (w/ lambda = 10): %f "+
          "\n(this value should be about 0.576051)\n\n", debug_J);
 
 printf("Program paused. Press enter to continue.\n");
-//pause();
+pause();
 
 /*
    =================== Part 8: Training NN ===================
@@ -246,37 +231,32 @@ printf("Program paused. Press enter to continue.\n");
 */
 printf("\nTraining Neural Network... \n")
 
-//  After you have completed the assignment, change the MaxIter to a larger
-//  value to see how more training helps.
-//options = optimset('MaxIter', 400); //not needed
+	//  After you have completed the assignment, change the MaxIter to a larger
+	//  value to see how more training helps.
 
-//  You should also try different values of lambda
+	//  You should also try different values of lambda
 val lambda8_2 = 1;
 
-// Create "short hand" for the cost function to be minimized
+	// Create "short hand" for the cost function to be minimized
 val costFunction=(p:DenseVectorCol[Double]) =>  nnCostFunction(p,
                                    input_layer_size,
                                    hidden_layer_size,
                                    num_labels, X.toDense, y, lambda8_2);
 
-// Now, costFunction is a function that takes in only one argument (the
-// neural network parameters)
-val (nn_params_8_2, cost_8_2) = fmincg(costFunction, initial_nn_params,5,5);
+	// Now, costFunction is a function that takes in only one argument (the
+	// neural network parameters)
+val (nn_params_8_2, cost_8_2) = fmincg(costFunction, initial_nn_params,5,5);// with just 5 iterations accuracy of 97% is reached
 
-//Obtain Theta1 and Theta2 back from nn_params
+	//Obtain Theta1 and Theta2 back from nn_params
 val Theta1_8_2 = reshape(nn_params(0 until hidden_layer_size * (input_layer_size + 1)),
                  hidden_layer_size, (input_layer_size + 1));
 
 val Theta2_8_2 = reshape(nn_params((hidden_layer_size * (input_layer_size + 1)) until nn_params.length),
                  num_labels, (hidden_layer_size + 1));
 
-//printf("saving the learned parameters")
-//val out1=new BufferedOutputStream(new FileOutputStream(new File(FILE_DIR+"/Theta1_8_2.txt")))
-//val out2=new BufferedOutputStream(new FileOutputStream(new File(FILE_DIR+"/Theta2_8_2.txt")))
-//Storage.storetxt(out1,Theta1_8_2)
-//Storage.storetxt(out2,Theta2_8_2)
+
 printf("Program paused. Press enter to continue.\n");
-//pause();
+pause();
 
 /*
    ================= Part 9: Visualize Weights =================
@@ -290,7 +270,7 @@ printf("\nVisualizing Neural Network... \n")
 displayData(Theta1_8_2(::, 1 until Theta1_8_2.numCols).toDense);
 
 printf("\nProgram paused. Press enter to continue.\n");
-//pause();
+pause();
 
 /*
    ================= Part 10: Implement Predict =================
@@ -301,14 +281,10 @@ printf("\nProgram paused. Press enter to continue.\n");
   you compute the training set accuracy.
 */
 val pred = predict(Theta1_8_2, Theta2_8_2, X.toDense);
-//println("pred = \n"+pred)
-pred:+=1 //to account for 1 index
-//println("pred = \n" + pred)
-//println("y = \n"+y)
 val pred_res=DenseVectorCol.tabulate[Double](pred.length)(
     (i)=> if(y(i)==pred(i)) 1 else 0
     )
-//println("pred_res = \n"+pred_res)
+
 var prediction_accuracy=mean(pred_res)*100
 printf("\nTraining Set Accuracy: %f\n",prediction_accuracy);
 

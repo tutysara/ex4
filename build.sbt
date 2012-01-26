@@ -1,5 +1,5 @@
 
-name := "ex4"
+name := "ex4r"
 
 version := "0.1"
 

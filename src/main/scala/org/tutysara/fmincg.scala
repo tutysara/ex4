@@ -19,7 +19,7 @@ object fmincg {
 		  	init_nn_params:DenseVectorCol[Double],max_iteration:Int=400,memory:Int=3):(DenseVectorCol[Double],Double)={
     
     //Initialize Theta
-    //val initial_rand_theta = DenseVectorCol.zeros[Double](nn_params.length); 
+    
 
     val f = new DiffFunction[DenseVectorCol[Double]] {    		
 	   		
