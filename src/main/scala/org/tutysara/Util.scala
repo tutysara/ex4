@@ -53,19 +53,49 @@ def linearize(in:DenseMatrix[Double]):DenseVectorCol[Double]={
         val i1:Int=(n%in.numRows)
         in(i1,j1)
       }
-      )
-  
-  
+      )   
+  res
+}
+def maxindex(in:DenseMatrix[Double],axis:Axis=Axis.Horizontal)={
+  val res=DenseVectorCol.zeros[Int](in.numRows)
+  in.foreachTriple((i,j,value)=>{
+    res(i)=if(value >in(i,res(i))) j else res(i)
+  }
+   )
   res
 }
   def main(args: Array[String]): Unit = {
   		val mat1=reshape(Array(0.0,1,2,3,4,5,6,7, 8.0).asVector,3,3)
   		val mat2=reshape(Array(0.0,1,2,3,4,5).asVector,2,3)
-  		println(mat1)
-  		println(mat2)
-  		val vec1=linearize(mat1)
+  		println(mat1.t)
+  		println()
+  		println(mat2.t)
+  		/*  		  
+  	    val vec1=linearize(mat1)  		
   		val vec2=linearize(mat2)
   		println(vec1)
   		println(vec2)
+  		 */
+  		
+  		val X_hc=DenseMatrix(
+       (1.000000 ,  0.084147,  -0.027942,  -0.099999),
+       (1.000000  , 0.090930,   0.065699,  -0.053657),
+       (1.000000  , 0.014112,   0.098936,   0.042017),
+       (1.000000  ,-0.075680,   0.041212,   0.099061),
+       (1.000000  ,-0.095892,  -0.054402,   0.065029)
+       )
+       
+  		val mat3=DenseMatrix(
+  		    (17.0 ,  24.0,    1.0,    8.0,   15.0),
+  		    (23.0,    5.0,   7.0,   14.0,   16.0),
+  		    (4.0,    6.0,   13.0,   20.0,   22.0),
+  		    (10.0,   12.0,   19.0,  21.0,    3.0),
+  		    (11.0,   18.0,  25.0,   2.0,    9.0)
+  		    )
+  		    
+  		println("maxindex(mat3) = \n"+maxindex(mat3)+"\n===============\n")
+  		println(maxindex(mat1.t.toDense))
+  		println()
+  		println(maxindex(mat2.t.toDense))
   }
 }

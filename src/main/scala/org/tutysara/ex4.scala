@@ -1,18 +1,21 @@
 package org.tutysara
 import scalala.library.MATStorage._
 import com.jmatio.types._
-//scalala imports from wiki
-import scalala.scalar._;
-import scalala.tensor.::;
-import scalala.tensor.mutable._;
-import scalala.tensor.dense._;
-import scalala.tensor.sparse._;
-import scalala.library.Library._;
-import scalala.library.LinearAlgebra._;
-import scalala.library.Statistics._;
-import scalala.library.Plotting._;
-import scalala.operators.Implicits._;
+import scalala.scalar._
+import scalala.tensor.::
+import scalala.tensor.mutable._
+import scalala.tensor.dense._
+import scalala.tensor.sparse._
+import scalala.library.Library._
+import scalala.library.LinearAlgebra._
+import scalala.library.Statistics._
+import scalala.library.Plotting._
+import scalala.operators.Implicits._
+import scalala.library.Storage
 import org.tutysara.Util._
+import java.io.BufferedOutputStream
+import java.io.FileOutputStream
+import java.io.File
 
 
 /*
@@ -81,11 +84,11 @@ printf("\nLoading Saved Neural Network Parameters ...\n")
 val varMap_weights=load(FILE_WEIGHTS,"Theta1","Theta2");
 val Theta1=varMap_weights.get("Theta1").get.get.asInstanceOf[MLDouble].asMatrix
 val Theta2=varMap_weights.get("Theta2").get.get.asInstanceOf[MLDouble].asMatrix
-	println("Theta1 and Theta2 patches when they are loaded")
+	//println("Theta1 and Theta2 patches when they are loaded")
 
-	println("Theta1 = \n"+Theta1)
-	println("Theta1 = "+Theta1.numRows,Theta1.numCols)
-	println("Theta2 = "+Theta2.numRows,Theta2.numCols)
+	//println("Theta1 = \n"+Theta1)
+	//println("Theta1 = "+Theta1.numRows,Theta1.numCols)
+	//println("Theta2 = "+Theta2.numRows,Theta2.numCols)
 	//println("Theta1 patch = \n"+Theta1(0 to 5,0 to 5))
 	println("Theta2 patch 1= \n"+Theta2(0 to 9,0 to 7))
 	println("Theta2 patch 2= \n"+Theta2(0 to 9,8 to 15))
@@ -229,7 +232,85 @@ printf("\n\nCost at (fixed) debugging parameters (w/ lambda = 10): %f "+
          "\n(this value should be about 0.576051)\n\n", debug_J);
 
 printf("Program paused. Press enter to continue.\n");
-pause();
+//pause();
+
+/*
+   =================== Part 8: Training NN ===================
+ 
+  You have now implemented all the code necessary to train a neural 
+  network. To train your neural network, we will now use "fmincg", which
+  is a function which works similarly to "fminunc". Recall that these
+  advanced optimizers are able to train our cost functions efficiently as
+  long as we provide them with the gradient computations.
+
+*/
+printf("\nTraining Neural Network... \n")
+
+//  After you have completed the assignment, change the MaxIter to a larger
+//  value to see how more training helps.
+//options = optimset('MaxIter', 400); //not needed
+
+//  You should also try different values of lambda
+val lambda8_2 = 1;
+
+// Create "short hand" for the cost function to be minimized
+val costFunction=(p:DenseVectorCol[Double]) =>  nnCostFunction(p,
+                                   input_layer_size,
+                                   hidden_layer_size,
+                                   num_labels, X.toDense, y, lambda8_2);
+
+// Now, costFunction is a function that takes in only one argument (the
+// neural network parameters)
+val (nn_params_8_2, cost_8_2) = fmincg(costFunction, initial_nn_params,5,5);
+
+//Obtain Theta1 and Theta2 back from nn_params
+val Theta1_8_2 = reshape(nn_params(0 until hidden_layer_size * (input_layer_size + 1)),
+                 hidden_layer_size, (input_layer_size + 1));
+
+val Theta2_8_2 = reshape(nn_params((hidden_layer_size * (input_layer_size + 1)) until nn_params.length),
+                 num_labels, (hidden_layer_size + 1));
+
+//printf("saving the learned parameters")
+//val out1=new BufferedOutputStream(new FileOutputStream(new File(FILE_DIR+"/Theta1_8_2.txt")))
+//val out2=new BufferedOutputStream(new FileOutputStream(new File(FILE_DIR+"/Theta2_8_2.txt")))
+//Storage.storetxt(out1,Theta1_8_2)
+//Storage.storetxt(out2,Theta2_8_2)
+printf("Program paused. Press enter to continue.\n");
+//pause();
+
+/*
+   ================= Part 9: Visualize Weights =================
+
+  You can now "visualize" what the neural network is learning by 
+  displaying the hidden units to see what features they are capturing in 
+  the data.
+*/
+printf("\nVisualizing Neural Network... \n")
+
+displayData(Theta1_8_2(::, 1 until Theta1_8_2.numCols).toDense);
+
+printf("\nProgram paused. Press enter to continue.\n");
+//pause();
+
+/*
+   ================= Part 10: Implement Predict =================
+
+  After training the neural network, we would like to use it to predict
+  the labels. You will now implement the "predict" function to use the
+  neural network to predict the labels of the training set. This lets
+  you compute the training set accuracy.
+*/
+val pred = predict(Theta1_8_2, Theta2_8_2, X.toDense);
+//println("pred = \n"+pred)
+pred:+=1 //to account for 1 index
+//println("pred = \n" + pred)
+//println("y = \n"+y)
+val pred_res=DenseVectorCol.tabulate[Double](pred.length)(
+    (i)=> if(y(i)==pred(i)) 1 else 0
+    )
+//println("pred_res = \n"+pred_res)
+var prediction_accuracy=mean(pred_res)*100
+printf("\nTraining Set Accuracy: %f\n",prediction_accuracy);
 
   }   
 
